@@ -1,0 +1,111 @@
+# https://peps.python.org/pep-0517/
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# https://peps.python.org/pep-0621/
+[project]
+name = "merfish3d-wfacq"
+description = "qi2lab 3D MERFISH widefield data acquisition"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "BSD 3-Clause License" }
+authors = [
+    { email = "douglas.shepherd@asu.edu", name = "Douglas Shepherd" },
+]
+dynamic = ["version"]
+dependencies = ["pymmcore-plus",
+                "pyserial",
+                "pymmcore-gui @ git+https://github.com/fdrgsp/pymmcore-gui@d21074a",
+                "pymmcore-widgets @ git+https://github.com/pymmcore-plus/pymmcore-widgets@main",
+                "tensorstore",
+                "pandas",
+                "ome-writers",
+                "tifffile"]
+
+[project.scripts]
+merfish3d-wfacq = "merfish3d_wfacq.app:main"
+
+[tool.hatch.version]
+path = "src/merfish3d_wfacq/__init__.py"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+only-include = ["src"]
+sources = ["src"]
+
+# extras
+# https://peps.python.org/pep-0621/#dependencies-optional-dependencies
+[project.optional-dependencies]
+dev = [
+    "pre-commit",
+    "pytest",
+    "pytest-mock",
+    "pytest-qt",
+    "ruff",
+    "roifile",
+    "shapely",
+    "zensical",
+    "merfish3d-analysis @ git+https://github.com/QI2lab/merfish3d-analysis@pr119-yaozarrs-ngff05",
+]
+
+[project.urls]
+Source = "https://www.github.com/qi2lab/merfish3d-wfacq"
+Tracker = "https://www.github.com/qi2lab/merfish3d-wfacq/issues"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+src = ["src"]
+fix = true
+unsafe-fixes = true
+exclude = [
+    ".pytest_tmp",
+    "pytest_tmp",
+    ".pytest_tmp_env",
+    "pytest_tmp_env",
+]
+
+[tool.ruff.lint]
+pydocstyle = { convention = "numpy" }
+select = [
+    "E",
+    "W",
+    "F",
+    "D417",
+    "I",
+    "UP",
+    "C4",
+    "B",
+    "A001",
+    "ANN",
+    "RUF",
+    "TC",
+    "TID",
+]
+ignore = [
+    "ANN401",
+    "D401",
+    "E402",
+    "E501",
+]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*.py" = ["D", "S", "ANN"]
+"tests/**/*.py" = ["D", "S", "ANN"]
+"src/merfish3d_wfacq/hardware/AbstractValve.py" = ["ANN"]
+"src/merfish3d_wfacq/hardware/HamiltonMVP.py" = ["ANN"]
+
+[tool.ruff.format]
+docstring-code-format = true
+skip-magic-trailing-comma = false
+
+[tool.pytest.ini_options]
+addopts = "--basetemp=pytest_tmp_env/runtime_tmp/basetemp"
+testpaths = ["tests"]
+

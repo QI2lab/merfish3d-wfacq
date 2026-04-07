@@ -1,0 +1,11 @@
+*.pyc
+.codex/*
+.ruff/*
+__pycache__/*
+.ipynb_checkpoints/*
+.vscode/*
+.idea/*
+pytest_cache/*
+pytest_tmp_env/*
+site/
+

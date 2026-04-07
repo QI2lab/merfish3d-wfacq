@@ -1,0 +1,21 @@
+[project]
+site_name = "merfish3d-wfacq"
+site_description = "qi2lab 3D MERFISH widefield data acquisition"
+site_url = "https://qi2lab.github.io/merfish3d-wfacq/"
+docs_dir = "docs"
+site_dir = "site"
+repo_url = "https://www.github.com/qi2lab/merfish3d-wfacq"
+repo_name = "qi2lab/merfish3d-wfacq"
+edit_uri = "edit/main/docs/"
+
+[project.theme]
+language = "en"
+features = [
+  "content.action.edit",
+  "content.action.view",
+]
+
+[project.theme.icon]
+repo = "fontawesome/brands/github"
+edit = "material/pencil"
+view = "material/eye"
