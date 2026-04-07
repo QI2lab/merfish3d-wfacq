@@ -5,10 +5,8 @@ from typing import TYPE_CHECKING, Any
 
 import pandas as pd
 from pymmcore_gui import MicroManagerGUI, WidgetAction
-from pymmcore_gui.actions import WidgetActionInfo
-from pymmcore_plus import CMMCorePlus
-from qtpy.QtCore import Qt, Signal, Slot
-from qtpy.QtWidgets import (
+from pymmcore_gui._qt.QtCore import Qt, Signal
+from pymmcore_gui._qt.QtWidgets import (
     QCheckBox,
     QComboBox,
     QDoubleSpinBox,
@@ -28,6 +26,8 @@ from qtpy.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+from pymmcore_gui.actions import WidgetActionInfo
+from pymmcore_plus import CMMCorePlus
 from useq import MDASequence
 
 from merfish3d_wfacq.core_metadata import (
@@ -517,7 +517,6 @@ class MerfishFluidicsWidget(QWidget):
 
         return self._upstream.current_sequence()
 
-    @Slot()
     def _load_fluidics_program(self) -> None:
         """Load and preview a fluidics CSV file."""
 
@@ -537,7 +536,6 @@ class MerfishFluidicsWidget(QWidget):
             QMessageBox.critical(self, "Fluidics program error", str(exc))
         self._validate()
 
-    @Slot()
     def _load_exp_order(self) -> None:
         """Load and preview an experiment order file."""
 
@@ -556,7 +554,6 @@ class MerfishFluidicsWidget(QWidget):
             QMessageBox.critical(self, "Experiment order file error", str(exc))
         self._validate()
 
-    @Slot()
     def _load_codebook(self) -> None:
         """Load a MERFISH codebook table."""
 
@@ -574,7 +571,6 @@ class MerfishFluidicsWidget(QWidget):
             QMessageBox.critical(self, "Codebook error", str(exc))
         self._validate()
 
-    @Slot()
     def _load_illumination_profiles(self) -> None:
         """Load illumination profiles used for flatfield correction."""
 
@@ -599,14 +595,12 @@ class MerfishFluidicsWidget(QWidget):
             QMessageBox.critical(self, "Illumination-profile error", str(exc))
         self._validate()
 
-    @Slot()
     def _on_mode_changed(self) -> None:
         """Update widget state when the run mode changes."""
 
         self._apply_mode_ui()
         self._validate()
 
-    @Slot(bool)
     def _on_uniform_illumination_toggled(self, checked: bool) -> None:
         """Toggle generated all-ones illumination profiles.
 
@@ -687,7 +681,6 @@ class MerfishFluidicsWidget(QWidget):
         if is_iterative:
             self._single_round_combo.setEnabled(False)
 
-    @Slot(QTableWidgetItem)
     def _on_wavelength_table_item_changed(self, _item: QTableWidgetItem) -> None:
         """Revalidate after the wavelength table changes.
 
@@ -762,7 +755,6 @@ class MerfishFluidicsWidget(QWidget):
             return None
         return save_path
 
-    @Slot()
     def _run_acquisition(self) -> None:
         """Validate widget state and dispatch the prepared MERFISH run."""
 
@@ -789,7 +781,6 @@ class MerfishFluidicsWidget(QWidget):
             QMessageBox.critical(self, "Failed to run MERFISH acquisition", str(exc))
             self._append_log(f"ERROR: {exc}")
 
-    @Slot()
     def _refresh_core_metadata(self) -> None:
         """Refresh read-only datastore metadata derived from MMCore."""
 
@@ -831,7 +822,6 @@ class MerfishFluidicsWidget(QWidget):
             self._binning_spin.blockSignals(False)
             self._affine_zyx_px_edit.blockSignals(False)
 
-    @Slot()
     def _refresh_tile_overlap_display(self) -> None:
         """Refresh the displayed Stage Explorer overlap value."""
 
@@ -1043,7 +1033,6 @@ class MerfishFluidicsWidget(QWidget):
             illumination_profiles_path=self._illumination_profiles_path,
         )
 
-    @Slot()
     def _validate(self) -> None:
         """Validate the current widget state and update run availability."""
 
@@ -1086,13 +1075,11 @@ class MerfishFluidicsWidget(QWidget):
             return self._refresh_validated_ui_state()
         return self._validated_ui_state_cache, self._validation_error
 
-    @Slot(str)
     def _append_log(self, message: str) -> None:
         """Append one line to the widget log panel."""
 
         self._log.appendPlainText(str(message))
 
-    @Slot(str)
     def _set_status(self, message: str) -> None:
         """Update the widget status label."""
 
@@ -1117,7 +1104,6 @@ class MerfishFluidicsWidget(QWidget):
         request["event"].wait()
         return bool(request["approved"])
 
-    @Slot(object)
     def _handle_refresh_request(self, request: dict[str, Any]) -> None:
         """Show the REFRESH confirmation dialog for the operator."""
 
@@ -1129,8 +1115,6 @@ class MerfishFluidicsWidget(QWidget):
         answer = QMessageBox.question(self, "MERFISH fluidics refresh", text)
         request["approved"] = answer == QMessageBox.StandardButton.Yes
         request["event"].set()
-
-    @Slot(object, dict)
     def _on_sequence_started(self, _sequence: object, _meta: dict[str, Any]) -> None:
         """Update button state when an acquisition starts."""
 
@@ -1138,7 +1122,6 @@ class MerfishFluidicsWidget(QWidget):
         self._abort_button.setEnabled(True)
         self._set_status("MERFISH acquisition running.")
 
-    @Slot(object)
     def _on_sequence_finished(self, _sequence: object) -> None:
         """Restore widget state when an acquisition finishes."""
 

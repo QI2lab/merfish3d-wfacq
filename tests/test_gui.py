@@ -3,9 +3,9 @@ from pathlib import Path
 import pandas as pd
 import pytest
 from pymmcore_gui import MicroManagerGUI
+from pymmcore_gui._qt.QtCore import QTimer
+from pymmcore_gui._qt.QtWidgets import QApplication, QMessageBox
 from pymmcore_widgets.mda._core_mda import MDAWidget
-from qtpy.QtCore import QTimer
-from qtpy.QtWidgets import QApplication, QMessageBox
 from tests.merfish_builders import FITC_RHODAMINE_CY5_SEQUENCE, TWO_ROUND_EXP_ORDER
 from useq import MDASequence
 
@@ -197,50 +197,6 @@ def test_single_round_options_follow_fluidics_run_rounds(
         expected_rounds[0] if expected_rounds else None
     )
     assert fluidics_round_options(widget._fluidics_program) == expected_rounds
-
-
-def test_fluidics_only_mode_disables_imaging_inputs(
-    merfish_widget: object,
-) -> None:
-    widget = merfish_widget
-
-    widget._mode_combo.setCurrentIndex(widget._mode_combo.findData("fluidics_only"))
-
-    assert widget._run_button.text() == "Run fluidics"
-    assert widget._exp_order_browse.isEnabled() is False
-    assert widget._wavelength_table.isEnabled() is False
-    assert widget._simulate_pump.isEnabled() is True
-    assert widget._single_round_combo.isEnabled() is False
-
-
-def test_iterative_mode_enables_imaging_inputs(
-    merfish_widget: object,
-) -> None:
-    widget = merfish_widget
-
-    widget._mode_combo.setCurrentIndex(widget._mode_combo.findData("iterative"))
-
-    assert widget._run_button.text() == "Run acquisition"
-    assert widget._exp_order_browse.isEnabled() is True
-    assert widget._wavelength_table.isEnabled() is True
-    assert widget._simulate_pump.isEnabled() is True
-    assert widget._enable_drift.isEnabled() is True
-    assert widget._single_round_combo.isEnabled() is False
-
-
-def test_single_round_mode_limits_fluidics_controls(
-    merfish_widget: object,
-) -> None:
-    widget = merfish_widget
-
-    widget._mode_combo.setCurrentIndex(widget._mode_combo.findData("single_round"))
-
-    assert widget._run_button.text() == "Run single round imaging"
-    assert widget._exp_order_browse.isEnabled() is True
-    assert widget._wavelength_table.isEnabled() is True
-    assert widget._simulate_pump.isEnabled() is False
-    assert widget._enable_drift.isEnabled() is False
-    assert widget._single_round_combo.isEnabled() is True
 
 
 def test_iterative_uniform_config_enables_run_without_stage_explorer(

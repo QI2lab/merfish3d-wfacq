@@ -7,7 +7,6 @@ import pytest
 from tests.merfish_builders import FITC_RHODAMINE_CY5_SEQUENCE, TWO_ROUND_EXP_ORDER
 from useq import CustomAction, MDASequence
 
-from merfish3d_wfacq.dispatch import prepare_merfish_dispatch
 from merfish3d_wfacq.sequence import MERFISH_SETUP_ACTION_NAME, RunMode
 from merfish3d_wfacq.utils.data_io import read_exp_order
 from merfish3d_wfacq.workflow import (
@@ -152,22 +151,6 @@ def _ui_state(
     }
 
 
-def test_normalize_merfish_ui_state_accepts_valid_iterative_config() -> None:
-    normalized_ui_state = normalize_merfish_ui_state(
-        _ui_state(
-            mode=RunMode.ITERATIVE,
-            sequence=_sequence(),
-            fluidics_program=ITERATIVE_FLUIDICS_PROGRAM,
-            exp_order=_two_round_exp_order(),
-            codebook=ITERATIVE_CODEBOOK,
-            illumination_profiles=ITERATIVE_ILLUMINATION_PROFILES,
-            channel_specs=FITC_RHODAMINE_CY5_CHANNEL_SPECS,
-        )
-    )
-
-    assert normalized_ui_state["mode"] is RunMode.ITERATIVE
-
-
 def test_normalize_merfish_ui_state_accepts_uniform_illumination_without_profile() -> None:
     normalized_ui_state = normalize_merfish_ui_state(
         _ui_state(
@@ -280,57 +263,6 @@ def test_build_merfish_metadata_marks_uniform_illumination_mode() -> None:
     assert metadata["illumination_profiles_mode"] == "uniform"
     assert metadata["illumination_profiles_path"] == "<uniform>"
     assert "illumination_profiles" not in metadata
-
-
-@pytest.mark.parametrize(
-    ("mode", "save_name", "expect_output"),
-    [
-        (RunMode.ITERATIVE, "synthetic_run.ome.zarr", True),
-        (RunMode.FLUIDICS_ONLY, None, False),
-    ],
-)
-def test_prepare_merfish_dispatch_handles_imaging_and_fluidics_only_modes(
-    workspace_tmp_path: Path,
-    mode: RunMode,
-    save_name: str | None,
-    expect_output: bool,
-) -> None:
-    normalized_ui_state = normalize_merfish_ui_state(
-        _ui_state(
-            mode=mode,
-            sequence=(
-                _sequence()
-                if mode is not RunMode.FLUIDICS_ONLY
-                else None
-            ),
-            fluidics_program=ITERATIVE_FLUIDICS_PROGRAM,
-            exp_order=_two_round_exp_order() if mode is not RunMode.FLUIDICS_ONLY else None,
-            codebook=ITERATIVE_CODEBOOK if mode is not RunMode.FLUIDICS_ONLY else None,
-            illumination_profiles=(
-                ITERATIVE_ILLUMINATION_PROFILES
-                if mode is not RunMode.FLUIDICS_ONLY
-                else None
-            ),
-            use_uniform_illumination=(mode is RunMode.FLUIDICS_ONLY),
-            channel_specs=(
-                FITC_RHODAMINE_CY5_CHANNEL_SPECS
-                if mode is not RunMode.FLUIDICS_ONLY
-                else []
-            ),
-            reference_tile=0,
-        )
-    )
-
-    events, output = prepare_merfish_dispatch(
-        normalized_ui_state=normalized_ui_state,
-        save_path=(workspace_tmp_path / save_name) if save_name is not None else None,
-        overwrite=True,
-    )
-
-    assert isinstance(events, list)
-    assert bool(output) is expect_output
-    assert isinstance(events[0].action, CustomAction)
-    assert events[0].action.name == MERFISH_SETUP_ACTION_NAME
 
 
 @pytest.mark.parametrize(

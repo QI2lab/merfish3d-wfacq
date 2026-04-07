@@ -4,9 +4,9 @@ from pathlib import Path
 from typing import Literal
 
 from pymmcore_gui import MicroManagerGUI, create_mmgui
+from pymmcore_gui._qt.QtCore import QTimer
+from pymmcore_gui._qt.QtWidgets import QApplication
 from pymmcore_plus import CMMCorePlus
-from qtpy.QtCore import QTimer
-from qtpy.QtWidgets import QApplication
 
 from merfish3d_wfacq.gui import (
     _ensure_merfish_widget_action_registered,

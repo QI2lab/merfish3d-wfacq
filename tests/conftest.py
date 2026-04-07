@@ -74,7 +74,7 @@ def real_fluidics_case(request: pytest.FixtureRequest) -> dict[str, object]:
 
 def _process_qt_events() -> None:
     try:
-        from qtpy.QtWidgets import QApplication
+        from pymmcore_gui._qt.QtWidgets import QApplication
 
         app = QApplication.instance()
         if app is not None:
