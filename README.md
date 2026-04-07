@@ -1,6 +1,9 @@
 ﻿# merfish3d-wfacq
 
-Control suite for the qi2lab 3D MERFISH widefield acquisition platform. This control suite generates data that can be directly processed  our [GPU 3D MERFISH analysis processing platform](https://github.com/QI2lab/merfish3d-analysis).
+Control suite for the qi2lab 3D MERFISH widefield acquisition platform. This control suite generates data that can be directly processed using our GPU 3D MERFISH analysis processing platform, [merfish3d-analysis](https://github.com/QI2lab/merfish3d-analysis).
+
+
+`merfish3d-wfacq` implements a custom GUI widget, acquisition engine, and file writing code to perform iterative imaging spatial transcriptomics experiments. It is built on top of [Micro-Manager](https://github.com/micro-manager/micro-manager) and [pymmcore-plus](https://github.com/pymmcore-plus).
 
 Documentation, including example input files, is available at [https://qi2lab.github.io/merfish3d-wfacq/](https://qi2lab.github.io/merfish3d-wfacq/)
 
@@ -34,11 +37,6 @@ For interactive editing use
 ```
 pip install -e .
 ``` 
-
-## Overview
-
-merfish3d-wfacq implements a custom GUI widget, acquisition engine, and file writing code to perform imaging spatial transcriptomics experiments. It is built on top of [Micro-Manager](https://github.com/micro-manager/micro-manager) and [pymmcore-plus](https://github.com/pymmcore-plus).
-
 
 ## Documentation
 
