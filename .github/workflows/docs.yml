@@ -30,8 +30,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install project and docs dependencies
-        run: python -m pip install -e .[dev]
+      - name: Install docs dependencies
+        run: python -m pip install --upgrade pip zensical
 
       - name: Build docs
         run: zensical build --clean
