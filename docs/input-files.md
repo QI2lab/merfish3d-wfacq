@@ -39,6 +39,7 @@ Important behavior:
 
 - every distinct `round` value is a fluidics round
 - only rounds that contain `source = RUN` are treated as imaging rounds
+- fluidics-only runs execute all rounds in the fluidics program, even if no `RUN` rows are present
 - iterative imaging requires at least one `RUN` step
 - `REFRESH` is allowed for manual operator intervention, but it does not count as an imaging trigger
 
@@ -46,6 +47,7 @@ Practical guidance:
 
 - keep one `RUN` row for every round that should acquire images
 - if a round should only perform fluidics and not image, omit `RUN` for that round
+- for fluidics-only runs, `RUN` rows are optional and all listed rounds still execute
 - for single-round imaging, the selected round must exist in the experiment order file, and if a fluidics program is loaded it must also contain a `RUN` step for that round
 
 ## Experiment Order File
@@ -138,6 +140,7 @@ For fluidics-only runs:
 
 - only the fluidics program is required
 - the experiment order file and the codebook are not used
+- every round present in the fluidics program executes, whether or not the program contains `RUN`
 
 ## Common Failure Cases
 

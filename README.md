@@ -7,6 +7,8 @@ Control suite for the qi2lab 3D MERFISH widefield acquisition platform. This con
 
 Documentation, including example input files, is available at [https://qi2lab.github.io/merfish3d-wfacq/](https://qi2lab.github.io/merfish3d-wfacq/)
 
+Fluidics-only runs execute every round listed in the fluidics program, even when the program contains no `RUN` rows.
+
 ## Associated preprint publication
 [GPU-accelerated, self-optimizing processing for 3D multiplexed iterative RNA-FISH experiments](https://www.biorxiv.org/content/10.1101/2025.10.10.681751v2).
 

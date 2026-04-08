@@ -97,6 +97,15 @@ ITERATIVE_CODEBOOK = pd.DataFrame(
 
 ITERATIVE_ILLUMINATION_PROFILES = np.ones((3, 4, 4), dtype=np.float32)
 
+FLUIDICS_ONLY_PROGRAM_NO_RUN = pd.DataFrame(
+    {
+        "round": [1, 2],
+        "source": ["B01", "B02"],
+        "time": [0.1, 0.2],
+        "pump": [10.0, 12.0],
+    }
+)
+
 
 def _sequence() -> MDASequence:
     return FITC_RHODAMINE_CY5_SEQUENCE.model_copy(deep=True)
@@ -166,6 +175,25 @@ def test_normalize_merfish_ui_state_accepts_uniform_illumination_without_profile
     )
 
     assert bool(normalized_ui_state["use_uniform_illumination"]) is True
+
+
+def test_normalize_merfish_ui_state_accepts_fluidics_only_without_run_commands() -> None:
+    normalized_ui_state = normalize_merfish_ui_state(
+        _ui_state(
+            mode=RunMode.FLUIDICS_ONLY,
+            sequence=None,
+            fluidics_program=FLUIDICS_ONLY_PROGRAM_NO_RUN,
+            exp_order=None,
+            codebook=None,
+            illumination_profiles=None,
+            use_uniform_illumination=True,
+            channel_specs=[],
+        )
+    )
+
+    assert normalized_ui_state["mode"] is RunMode.FLUIDICS_ONLY
+    assert normalized_ui_state["rounds"] == [1, 2]
+    assert normalized_ui_state["experiment_order"] == {}
 
 
 def test_build_merfish_metadata_uses_normalized_core_and_widget_values() -> None:
@@ -286,7 +314,11 @@ def test_prepare_merfish_acquisition_handles_imaging_and_fluidics_only_modes(
                 if run_mode is not RunMode.FLUIDICS_ONLY
                 else None
             ),
-            fluidics_program=ITERATIVE_FLUIDICS_PROGRAM,
+            fluidics_program=(
+                ITERATIVE_FLUIDICS_PROGRAM
+                if run_mode is not RunMode.FLUIDICS_ONLY
+                else FLUIDICS_ONLY_PROGRAM_NO_RUN
+            ),
             exp_order=(
                 _two_round_exp_order() if run_mode is not RunMode.FLUIDICS_ONLY else None
             ),

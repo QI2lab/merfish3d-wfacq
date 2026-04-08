@@ -52,6 +52,7 @@ Before running:
 - the experiment order file must contain one column per active channel config name
 - experiment order file column order does not matter
 - exactly one experiment order file channel column must be `0` for every round, and that column is the fiducial channel
+- fluidics-only runs do not require any `RUN` step; they execute all rounds in the fluidics program
 - iterative imaging requires at least one `RUN` step in the fluidics program
 - iterative imaging requires experiment order file rounds to match the fluidics rounds that contain `RUN`
 - the codebook must contain enough bit columns for the highest bit used in the experiment order file
@@ -59,7 +60,7 @@ Before running:
 
 ## Run the acquisition
 
-- use `Run fluidics` for fluidics-only programs
+- use `Run fluidics` for fluidics-only programs, including programs with no `RUN` rows
 - use `Run acquisition` for full iterative MERFISH imaging
 - use `Run single round imaging` for a one-round test
 - use `Abort` to cancel a running acquisition

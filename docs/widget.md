@@ -22,7 +22,8 @@ Use [Preparing input files](input-files.md) for the exact file-format rules.
 
 The most important contracts are:
 
-- fluidics rounds only image when the program contains `RUN`
+- in imaging modes, fluidics rounds only image when the program contains `RUN`
+- in fluidics-only mode, every round in the fluidics program executes even if there are no `RUN` rows
 - experiment order file channel names must exactly match the active MDA channel names
 - experiment order file channel order does not matter
 - the unique all-zero experiment order file column is the fiducial channel
